@@ -12,8 +12,9 @@ using namespace std;
 int main()
 {
     Pathfinder x;
-    x.importMaze("/Users/Austin/Desktop/C++/cs235/Lab5/Lab5/Lab5/Mazes/Solvable2.txt");
-    cout << x.getMaze();
+    cout << "BOOL: " << x.importMaze("/Users/Austin/Desktop/C++/cs235/Lab5/Lab5/Lab5/Mazes/Unsolvable3.txt");
+   // cout << endl << endl;
+    //cout << x.getMaze();
     vector<string> y;
     y = x.solveMaze();
     cout << "vector: " << endl;
@@ -22,6 +23,7 @@ int main()
         cout << y[i] << endl;
     }
 
-    
+    bool test = true;
+    cout << "test: " << test;
     return 0;
 }

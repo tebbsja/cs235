@@ -166,46 +166,38 @@ bool Pathfinder::importMaze(string file_name)
         cout << "BAD OR FAIL\n";
         return false;
     }
-    
-    while (!file.eof())
-    {
+
         for (int z=0; z < 5; z++)
         {
             for (int y=0; y < 5; y++)
             {
                 for (int x=0; x < 5; x++)
                 {
-                    file >> temp;
-                    if (z == 0 && y == 0 && x == 0)
+                    
+                    if (file >> temp && (temp == 1 || temp == 0))
                     {
-                        if (temp == 0)
-                        {
-                            return false;
-                        }
-                        else
-                        {
                             temp_maze[x][y][z] = temp;
-                        }
-                    }
-                    else if (z ==4 && y == 4 && x ==4)
-                    {
-                        if (temp == 0)
-                        {
-                            return false;
-                        }
-                        else
-                        {
-                            temp_maze[x][y][z] = temp;
-                        }
                     }
                     else
                     {
-                        temp_maze[x][y][z] = temp;
+                        return false;
                     }
                     
                 }
             }
         }
+    
+    if (file >> temp)
+    {
+        return false;
+    }
+    if (temp_maze[0][0][0] != 1)
+    {
+        return false;
+    }
+    if (temp_maze[4][4][4] != 1)
+    {
+        return false;
     }
     
     for (int z=0; z < 5; z++)
