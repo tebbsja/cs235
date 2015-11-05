@@ -31,21 +31,18 @@ bool Pathfinder::isValid(string maze)
 {
     if (maze[0] != '1')
     {
-        cout << "FIRST IS 0 - CLOSED\n";
         return false;
     }
     unsigned long last = maze.size() - 2;
     
     if (maze[last] != '1')
     {
-        cout << "LAST IS 0 - CLOSED\n";
         return false;
     }
     for (int i=0; i < maze.size() -1; i++)
     {
         if (maze[i] != '0' && maze[i] != '1' && maze[i] != '\n' && maze[i] != ' ')
         {
-            cout << "NOT A 0 OR 1 - INVALID\n";
             return false;
         }
     }
@@ -142,8 +139,6 @@ void Pathfinder::createRandomMaze()
             }
         }
     }
-    //cout << "ONES: " << ocount << endl;
-    //cout << "ZEROES: " << zcount << endl << endl;
 
     current_maze[0][0][0] = 1;
     current_maze[4][4][4] = 1;
@@ -173,10 +168,9 @@ bool Pathfinder::importMaze(string file_name)
     ifstream file;
     file.open(file_name);
     
-    if (file.bad() || file.fail())
+    if (file.bad() || file.fail()) //if cant find file, or there is an error
     {
-        cout << "BAD OR FAIL\n";
-        return false;
+        return false; // return false, do nothing
     }
 
         for (int z=0; z < 5; z++)
@@ -186,8 +180,8 @@ bool Pathfinder::importMaze(string file_name)
                 for (int x=0; x < 5; x++)
                 {
                     
-                    if (file >> temp && (temp == 1 || temp == 0))
-                    {
+                    if (file >> temp && (temp == 1 || temp == 0)) // as long as file is reading in either 1 or 0 
+                    {							// put in our temporary maze
                             temp_maze[x][y][z] = temp;
                     }
                     else
@@ -199,16 +193,17 @@ bool Pathfinder::importMaze(string file_name)
             }
         }
     
-    if (file >> temp)
-    {
+
+    if (file >> temp) // the 3 nested for loops grab 125 digits, if we read any after that, there are too many
+    {			// return false
         return false;
     }
-    if (temp_maze[0][0][0] != 1)
-    {
-        return false;
+    if (temp_maze[0][0][0] != 1) // if opening is blocked
+    {				// return false
+        return false;	
     }
-    if (temp_maze[4][4][4] != 1)
-    {
+    if (temp_maze[4][4][4] != 1) // if exit is blocked
+    {				// return false
         return false;
     }
     
@@ -216,8 +211,8 @@ bool Pathfinder::importMaze(string file_name)
     {
         for (int y=0; y < 5; y++)
         {
-            for (int x=0; x < 5; x++)
-            {
+            for (int x=0; x < 5; x++) // after we have checked to make sure it is valid
+            {				// set current maze = temporary maze
                 current_maze[x][y][z] = temp_maze[x][y][z];
             }
         }
@@ -252,52 +247,62 @@ bool Pathfinder::findSolution(vector<string>& solution, vector<string>& temp, in
     
     if (current_maze[x][y][z] == 0)
     {
-        return false; //not an opening
+        return false; //can't go there
     }
-    if ( x < 0 || x > 4 || y < 0 || y > 4 || z < 0 || z > 4)
+    if ( x < 0 || x > 4 || y < 0 || y > 4 || z < 0 || z > 4) // out of range of maze
     {
         return false;
     }
     
-    if ( x == 4 && y == 4 && z == 4)
+    if ( x == 4 && y == 4 && z == 4) // if we make it to the last tile, include in our solution vector
     {
         ss << "(" << x << ", " << y << ", " << z << ")";
         solution.push_back(ss.str());
         return true;
     }
     
-    ss << "(" << x << ", " << y << ", " << z << ")";
-    current_tile = ss.str();
+    ss << "(" << x << ", " << y << ", " << z << ")"; // if it is not a 0 and is in range, we can step on it
+    current_tile = ss.str(); 				//set it to our current tile
     
-    for (int i = 0; i < temp.size(); i++)
+    for (int i = 0; i < temp.size(); i++) 
     {
-        if (current_tile == temp[i])
-        {
+        if (current_tile == temp[i]) // if this current tile is already in our vector, we've already been here
+        {				// so return false
             return false;
         }
     }
-    temp.push_back(current_tile);
-    solution.push_back(current_tile);
+    temp.push_back(current_tile); // otherwise put tile in our temporary vector
+    solution.push_back(current_tile); // and the solution vector
     
-    if (findSolution(solution, temp, x + 1, y, z) == true)
+    if (findSolution(solution, temp, x + 1, y, z) == true) // look at tile to the right
+    {
         return true;
-    if (findSolution(solution, temp, x, y + 1, z) == true)
+    }
+    if (findSolution(solution, temp, x, y + 1, z) == true) // look at tile down
+    {
         return true;
-    if (findSolution(solution, temp, x, y, z + 1) == true)
+    }
+    if (findSolution(solution, temp, x, y, z + 1) == true) // look at tile on next level
+    {
         return true;
-    if (findSolution(solution, temp, x - 1, y, z) == true)
+    }
+    if (findSolution(solution, temp, x - 1, y, z) == true) // look at tile to the left
+    {
         return true;
-    if (findSolution(solution, temp, x, y - 1, z) == true)
+    }
+    if (findSolution(solution, temp, x, y - 1, z) == true) // look at tile above
+    {
         return true;
-    if (findSolution(solution, temp, x, y, z - 1) == true)
+    }
+    if (findSolution(solution, temp, x, y, z - 1) == true) // look at tile on previous level
+    {
         return true;
+    }
     
-    solution.pop_back();
-    
+    solution.pop_back(); // if tile gets here, it is not a possible solution because you cant go any further
+    			// so take it out solution vector and return false
     return false;
     
-   
-    return false;
 }
 
 vector<string> Pathfinder::solveMaze()
