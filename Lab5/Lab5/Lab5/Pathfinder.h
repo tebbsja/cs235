@@ -11,6 +11,8 @@
 
 #include "PathfinderInterface.h"
 #include <string>
+#include <cstdlib>
+#include <ctime>
 #include <stdio.h>
 
 const int ROWS = 5;

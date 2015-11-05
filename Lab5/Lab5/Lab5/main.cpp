@@ -12,9 +12,11 @@ using namespace std;
 int main()
 {
     Pathfinder x;
-    cout << "BOOL: " << x.importMaze("/Users/Austin/Desktop/C++/cs235/Lab5/Lab5/Lab5/Mazes/Unsolvable3.txt");
+    //cout << "BOOL: " << x.importMaze("/Users/Austin/Desktop/C++/cs235/Lab5/Lab5/Lab5/Mazes/Unsolvable3.txt");
    // cout << endl << endl;
     //cout << x.getMaze();
+    x.createRandomMaze();
+    cout << x.getMaze();
     vector<string> y;
     y = x.solveMaze();
     cout << "vector: " << endl;

@@ -14,6 +14,7 @@
 
 Pathfinder::Pathfinder()
 {
+    srand((unsigned int)(time(0)));
     for (int z=0; z < 5; z++)
     {
         for (int y=0; y < 5; y++)
@@ -120,7 +121,8 @@ string Pathfinder::getMaze()
  */
 void Pathfinder::createRandomMaze()
 {
-    srand((unsigned int)(time(0)));
+    int zcount=0, ocount=0;
+    
     
     for (int z=0; z < 5; z++)
     {
@@ -129,9 +131,19 @@ void Pathfinder::createRandomMaze()
             for (int x=0; x < 5; x++)
             {
                 current_maze[x][y][z] = rand() % 2;
+                if (current_maze[x][y][z] == 1)
+                {
+                    ocount++;
+                }
+                else
+                {
+                    zcount++;
+                }
             }
         }
     }
+    //cout << "ONES: " << ocount << endl;
+    //cout << "ZEROES: " << zcount << endl << endl;
 
     current_maze[0][0][0] = 1;
     current_maze[4][4][4] = 1;
@@ -299,63 +311,3 @@ vector<string> Pathfinder::solveMaze()
     
     return solution;
 }
-//-----------------------------------------------------------------------------------------
-
-/*vector<string> Mazerunner::solveMaze()
-{
-    vector<string> solution;
-    vector<string> beenHere;
-    findPath(0, 0, 0, solution, beenHere);
-    return solution;
-}
-
-bool Mazerunner::findPath(int x, int y, int z, vector<string>& solution, vector<string>& beenHere)
-{
-    if ((x < 0 || x > 4) || (y < 0 || y > 4) || (z < 0 || z > 4))
-    {
-        return false;
-    }
-    if (x == 4 && y == 4 && z == 4)
-    {
-        stringstream currentCell;
-        currentCell << "(" << x << ", " << y << ", " << z << ")";
-        string thisCell = currentCell.str();
-        solution.push_back(thisCell);
-        return true;
-    }
-    if (maze[x][y][z] == 0)
-    {
-        return false;
-    }
-    
-    stringstream currentCell;
-    currentCell << "(" << x << ", " << y << ", " << z << ")";
-    string thisCell = currentCell.str();
-    
-    for (int i = 0; i < beenHere.size(); i++)
-    {
-        if (thisCell == beenHere[i])
-        {
-            return false;
-        }
-    }
-    beenHere.push_back(thisCell);
-    solution.push_back(thisCell);
-    
-    if (findPath(x + 1, y, z, solution, beenHere) == true)
-        return true;
-    if (findPath(x, y + 1, z, solution, beenHere) == true)
-        return true;
-    if (findPath(x, y, z + 1, solution, beenHere) == true)
-        return true;
-    if (findPath(x - 1, y, z, solution, beenHere) == true)
-        return true;
-    if (findPath(x, y - 1, z, solution, beenHere) == true)
-        return true;
-    if (findPath(x, y, z - 1, solution, beenHere) == true)
-        return true;
-    
-    solution.pop_back();
-    
-    return false;
-}*/
