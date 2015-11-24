@@ -476,19 +476,23 @@ string GPA::queryMap(string fileName)
  */
 void GPA::clear()
 {
-    for (map<unsigned long long int, StudentInterface*>::iterator itr = myMap.begin(); itr != myMap.end(); itr++)
-    {		
-	delete itr->second;
-    }
-
-    myMap.clear();
-
-    for (set<StudentInterface*, Comparator>::iterator itr = mySet.begin(); itr != mySet.end(); itr++)
+    for (map<unsigned long long int, StudentInterface*>::iterator it = myMap.begin(); it != myMap.end(); it++)
     {
-	StudentInterface* temp = *itr;
-	delete temp;
+		//delete it->first;
+		//cout << "\nclear() Map: deleting student" << endl;
+		
+		delete it->second;
     }
-	
-    mySet.clear();
+	myMap.clear();
+
+	// check this one
+	for (set<StudentInterface*, Comparator>::iterator it = mySet.begin(); it != mySet.end(); it++){
+		StudentInterface* temp = *it;
+		//cout << "\nclear() Set: deleting student" << endl;
+		delete temp;
+	}
+
+	//cout << "\nmySet.clear()" << endl;
+	mySet.clear();
 
 }

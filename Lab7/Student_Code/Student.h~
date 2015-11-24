@@ -26,7 +26,7 @@ private:
 public:
 
     Student(unsigned long long int student_id, string student_name, string student_address, string student_phone_number);
-    ~Student(void){};
+    ~Student(){};
     
     virtual unsigned long long int getID();
     

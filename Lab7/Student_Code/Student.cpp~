@@ -109,7 +109,7 @@ string Student::toString()
 	avg = total_GPA / total_classes;
     }
     
-    ss << ID << "\n" << name << "\n" << address << "\n" << phone_number << "\n" << setprecision(2) << fixed << avg;
+    ss << ID << "\n" << name << "\n" << address << "\n" << phone_number << "\n" << avg;
     
     return ss.str();
 }
