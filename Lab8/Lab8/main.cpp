@@ -7,13 +7,27 @@
 //
 
 #include <iostream>
+#include "QS.h"
 
 using namespace std;
 
 int main()
 {
+    QS x;
+    x.createArray(6);
+    x.addToArray(4);
+    x.addToArray(6);
+    x.addToArray(34);
+    x.addToArray(12);
+    x.addToArray(17);
+    x.addToArray(3);
     
-    cout << "Hello World\n";
+    //x.print();
+    cout << endl;
+    cout << endl;
+    x.sortAll();
+    //x.print();
+    cout << x.getArray();
     
     return 0;
 }

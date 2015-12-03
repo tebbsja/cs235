@@ -9,9 +9,22 @@
 #include "QS.h"
 #include <sstream>
 
+QS::QS()
+{
+    myArray = NULL;
+    current_size = 0;
+    total_size = 0;
+}
 QS::~QS()
 {
     clear();
+}
+
+void QS::swapValues(int first, int second)
+{
+    int temp = myArray[first];
+    myArray[first] = myArray[second];
+    myArray[second] = temp;
 }
 
 /*
@@ -25,18 +38,43 @@ QS::~QS()
 
 void QS::sortAll()
 {
-    sort(0, (size-1));
+
+    int last = current_size -1;
+    if (current_size > 1)
+    {
+        sort(0, last);
+    }
 }
 
 void QS::sort(int left, int right)
 {
-    if (left < right)
+    if (right - left == 1)
     {
-        int pivot = medianOfThree(left, right);
-        pivot = partition(left,right,pivot);
-        sort(left, (pivot-1));
-        sort((pivot+1), right);
+        if (myArray[right] > myArray[left])
+        {
+            return;
+        }
+        else
+        {
+            swapValues(right, left);
+            return;
+        }
     }
+    
+    if (right == left)
+    {
+        return;
+    }
+    
+    if (left < 0 || right > current_size - 1 || right < left || left > right)
+    {
+        return;
+    }
+    
+    int pivot= medianOfThree(left, right);
+    int newIndex = partition(left, right, pivot);
+    sort(left, newIndex - 1);
+    sort(newIndex + 1, right);
 }
 
 /*
@@ -66,36 +104,31 @@ void QS::sort(int left, int right)
  */
 int QS::medianOfThree(int left, int right)
 {
-    if ( size == 0 )
+    if (current_size < 0)
     {
         return -1;
     }
-    if (left >= right || right > size-1 || left < 0)
+    if (left > right || left < 0 || right < left || right > current_size - 1 || left == right)
     {
         return -1;
     }
-    int middle_index = (left + right) / 2;
     
-    if (array[left] > array[middle_index])
+    int middle = (left + right) / 2;
+    
+    if (myArray[left] > myArray[middle])
     {
-        int temp = array[left];
-        array[left] = array[middle_index];
-        array[middle_index] = temp;
+        swapValues(left, middle);
     }
-    if(array[left] > array[right])
+    if (myArray[middle] > myArray[right])
     {
-        int temp = array[left];
-        array[left] = array[right];
-        array[right] = temp;
+        swapValues(right, middle);
     }
-    if(array[middle_index] > array[right])
+    if (myArray[left] > myArray[middle])
     {
-        int temp = array[middle_index];
-        array[middle_index] = array[right];
-        array[right] = temp;
+        swapValues(left, middle);
     }
     
-    return middle_index;
+    return middle;
 }
 
 /*
@@ -122,83 +155,63 @@ int QS::medianOfThree(int left, int right)
  */
 int QS::partition(int left, int right, int pivotIndex)
 {
-    if(array==NULL)
-        return -1;
-    if(pivotIndex>right||pivotIndex<left)
-        return -1;
-    if(left<0 || right>size-1 || left>right)
-        return -1;
-    pivotIndex=medianOfThree(left,right);
-    //cout<<"PIVOT VALUE: "<<array[pivotIndex]<<endl;
-    int small[size];
-    int large[size];
-    int equal[size];
-    int largecount=0;
-    int smallcount=0;
-    int equalcount=0;
-    for(int i=left;i<=right;i++)
+    if (myArray == NULL)
     {
-        if(array[i]<array[pivotIndex])
-        {
-            //cout<<array[i]<<"<"<<array[pivotIndex]<<endl;
-            small[smallcount]=array[i];
-            //cout<<"SMALL: "<<small[smallcount]<<endl;
-            smallcount++;
-        }
-        else if(array[i]>array[pivotIndex])
-        {
-            //cout<<array[i]<<">"<<array[pivotIndex]<<endl;
-            large[largecount]=array[i];
-            //cout<<"LARGE: "<<large[largecount]<<endl;
-            largecount++;
-        }
-        else if(array[i]==array[pivotIndex])
-        {
-            //cout<<array[i]<<"="<<array[pivotIndex]<<endl;
-            equal[equalcount]=array[i];
-            //cout<<"EQUAL: "<<equal[equalcount]<<endl;
-            equalcount++;
-        }
+        return -1;
     }
-    // cout<<"LARGE AT 0: "<<large[0]<<endl;
-    // cout<<"SMALL AT 0: "<<small[0]<<endl;
-    // cout<<"EQUAL AT 0: "<<equal[0]<<endl;
-    // cout<<"Small: [";
-    // for(int i=0;i<smallcount;i++)
-    // {
-    // 	cout<<small[i];
-    // 	if(i<smallcount-1) cout<<", ";
-    // }
-    // cout<<"]"<<endl;
-    // cout<<"Equal: [";
-    // for(int i=0;i<equalcount;i++)
-    // {
-    // 	cout<<equal[i];
-    // 	if(i<equalcount-1) cout<<", ";
-    // }
-    // cout<<"]"<<endl;
-    // cout<<"Large: [";
-    // for(int i=0;i<largecount;i++)
-    // {
-    // 	cout<<large[i];
-    // 	if(i<largecount-1) cout<<", ";
-    // }
-    // cout<<"]"<<endl;
     
-    for(int i=0;i<smallcount;i++)
+    if ((current_size < 0) || (total_size <= 0))
     {
-        array[left+i]=small[i];
+        return -1;
     }
-    for(int i=0;i<equalcount;i++)
+    if ((left < 0) || (right < 0))
     {
-        array[left+smallcount+i]=equal[i];
+        return -1;
     }
-    for(int i=0;i<largecount;i++)
+    if ((right > current_size - 1))
     {
-        array[left+smallcount+equalcount+i]=large[i];
+        return -1;
     }
-    return left+smallcount;
+    if (!(left < right))
+    {
+        return -1;
+    }
+    if ((!(pivotIndex <= right)) || (!(pivotIndex >= left)) )
+    {
+        return -1;
+    }
+    
+    swapValues(right, pivotIndex);
+    int l = left;
+    int r = right - 1;
 
+    
+    
+    while (l < r)
+    {
+        while ((myArray[l] < myArray[right]))
+        {
+            l++;
+        }
+        
+        while ((myArray[r] > myArray[right]))
+        {
+            r--;
+        }
+        
+        if (l < r)
+        {
+            swapValues(l, r);
+        }
+    }
+    
+    if (l >= r)
+    {
+        swapValues(l, right);
+        return l;
+    }
+    
+    return l;
 }
 
 /*
@@ -214,21 +227,24 @@ int QS::partition(int left, int right, int pivotIndex)
  */
 string QS::getArray()
 {
-    if(size==0)
-        return "";
-    stringstream arraystream;
-    //arraystream<<"{";
-    for(int i=0;i<size;i++)
+    stringstream ss;
+    if (current_size == 0)
     {
-        arraystream<<array[i];
-        if(i!=size-1)
+        return "";
+    }
+    for (int i=0; i < current_size; i++)
+    {
+        if (i != current_size - 1)
         {
-            arraystream<<",";
+            ss << myArray[i] << ",";
+        }
+        else
+        {
+            ss << myArray[i];
         }
     }
     
-    //arraystream<<"}"<<endl;
-    return arraystream.str();
+    return ss.str();
 }
 
 /*
@@ -236,7 +252,7 @@ string QS::getArray()
  */
 int QS::getSize()
 {
-    return size;
+    return current_size;
 }
 
 /*
@@ -250,10 +266,10 @@ int QS::getSize()
  */
 void QS::addToArray(int value)
 {
-   	if(size < capacity)
+    if (current_size != total_size)
     {
-        array[size]=value;
-        size++;
+        myArray[current_size] = value;
+        current_size++;
     }
 }
 
@@ -267,21 +283,19 @@ void QS::addToArray(int value)
  * @return
  *		true if the array was created, false otherwise
  */
-bool QS::createArray(int Capacity)
+bool QS::createArray(int capacity)
 {
-    if(!arrayAvailable)
+    if (capacity < 1)
     {
-        array = new int[Capacity];
-        arrayAvailable=true;
-        capacity = Capacity;
-        return true;
+        return false;
     }
     else
     {
         clear();
-        createArray(Capacity);
+        myArray = new int[capacity];
+        total_size = capacity;
+        return true;
     }
-    return false;
 }
 
 /*
@@ -289,10 +303,15 @@ bool QS::createArray(int Capacity)
  */
 void QS::clear()
 {
-   	int* temp=array;
-    delete[] temp;
-    array=NULL;
-    capacity=0;
-    arrayAvailable=false;
-    size=0;
+    if (myArray != NULL)
+    {
+        delete[] myArray;
+        myArray = NULL;
+        current_size = 0;
+        total_size = 0;
+    }
 }
+
+
+
+

@@ -14,13 +14,13 @@
 class QS : public QSInterface
 {
 private:
-    int* array;
-    int size;
-    int capacity;
-    bool arrayAvailable = false;
+    int* myArray;
+    int current_size;
+    int total_size;
+    
 public:
 
-    QS(){};
+    QS();
     ~QS();
     
     void sort(int left, int right);
@@ -34,6 +34,8 @@ public:
     virtual bool createArray(int capacity);
     virtual void clear();
     
+    void print();
+    void swapValues(int first, int second);
 };
 
 #endif /* QS_h */
